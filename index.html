@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Narrative Visualization</title>
+  <link rel="stylesheet" type="text/css" href="styles/fullpage.min.css"></style>
+  <link rel="stylesheet" type="text/css" href="styles/style.css"></style>
+</head>
+<body>
+
+  <div id="fullpage">
+    <div class="section">
+
+      <div class="slide" data-anchor="welcome">
+        <h1>Narrative Visualization</h1>
+        <div class="intro">
+          <p>&nbsp;</p>
+          <div>Created by Skylar Ripley for CS416 Data Visualization at UIUC</div>
+        </div>
+      </div>
+
+      <div class="slide" data-anchor="dataset">
+        <h2>The Dataset</h2>
+        <div class="intro">
+          <p>
+            Notes about dataset.
+          </p>
+          <p>
+            Purpose of narrative visualization
+            <a class="section-1-button" rel="noopener" href="#charts/about">About the Visualization</a>
+          </p>
+        </div>
+      </div>
+
+      <div class="slide" data-anchor="about">
+        <h2>About the Visualization</h2>
+        <div class="intro">
+          <p>
+            <strong>Interactive Slideshow</strong>
+            This narrative visualization follows an interactive slideshow structure to guide users through
+            various selected scenarios.
+            This is the best choice for this dataset as it is too big to be presented to users directly.
+            Data for each slide has been pre-processed and aggregated separately offline.
+          </p>
+          <p>
+            <strong>Scenes</strong>
+            Four scenes have been included in this visualization using consistent template and layout. Each slide
+            can be navigated using arrows at left or right, or using the navigation dots on top. Or use keyboard
+            left and right buttons.
+          </p>
+          <p>
+            <strong>Annotations</strong>
+            Interesting trends are annotated using orange color font and box in chart 1, 2 and 3.
+          </p>
+          <p>
+            <strong>Parameters</strong>
+            Chart 2 and 3 include filters to display data from selected type of data source. Chart 4 includes a checkbox
+            to reveal / hide grid that covers on top of the map.
+          </p>
+          <p>
+            <strong>Triggers</strong>
+            The animation of chart 3 and 4 will be triggered automatically when the scene / slide is displayed. Changing
+            filter in chart 3 will also trigger the chart animation.
+          </p>
+          <p>
+            <small>Chrome is recommended. Chart 4 may be very slow or unresponsive in other browsers.</small>
+          </p>
+        </div>
+      </div>
+      
+      <div class="slide" data-anchor="chart1">
+        <h3>Number of Netflix Originals by Year</h3>
+        <div class="chart chart1">
+          <svg id="svg1"></svg>
+        </div>
+        <div class="intro">
+          <p>
+            First chart shows that the number of Netflix originals has increased each year.
+          </p>
+          <p>
+            Now let's see how IMDB scores have faired over the same time period.
+          </p>
+        </div>
+      </div>
+
+      <div class="slide" data-anchor="chart2">
+        <h3>Average IMDB Score of Netflix Originals by Year</h3>
+        <div class="chart chart2">
+          <svg id="svg2"></svg>
+        </div>
+        <div class="intro">
+          <p>
+            Second chart shows that scores have actually steadily declined over the past few years.
+          </p>
+          <p>
+            Placeholder
+          </p>
+        </div>
+      </div>
+
+      <div class="slide" data-anchor="chart3">
+        <h3>Average IMDB Score of Netflix Originals by Genre</h3>
+        <div class="chart chart3">
+          <svg id="svg3"></svg>
+        </div>
+        <div class="intro">
+          <p>
+            The third line chart indicates that activities dropped significantly in university area over weekends.
+            Such pattern cannot be found in nightlife and downtown areas.
+          </p>
+          <p>
+            This chart uses only a few selected squares as sample. See next scene for all squares.
+          </p>
+        </div>
+      </div>
+      <div class="slide" data-anchor="source">
+        <h2>Source</h2>
+        <div class="intro">
+          <p>
+            <strong>Dataset (free registration required)</strong><br/>
+            <a href="https://dandelion.eu/datagems/SpazioDati/telecom-sms-call-internet-mi/description/" target="_blank">
+              https://dandelion.eu/datagems/SpazioDati/telecom-sms-call-internet-mi/description/
+            </a>
+          </p>
+          <p>
+            <strong>Fullpage.js (for slideshow)</strong><br/>
+            <a href="https://github.com/alvarotrigo/fullPage.js" target="_blank">
+              https://github.com/alvarotrigo/fullPage.js
+            </a>
+          </p>
+          <p>
+            <strong>Source code</strong><br/>
+            <a href="https://github.com/tianfeichen/cs498-data-visualization" target="_blank">
+              https://github.com/tianfeichen/cs498-data-visualization
+            </a>
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+    
+
+  <script src="scripts/scrolloverflow.min.js"></script>
+  <script src="scripts/fullpage.min.js"></script>
+  <script src="scripts/d3.v4.min.js"></script>
+  <script src=
+                  "https://d3js.org/d3-color.v1.min.js">
+  </script>
+  <script src=
+                  "https://d3js.org/d3-interpolate.v1.min.js">
+  </script>
+  <script src=
+                  "https://d3js.org/d3-scale-chromatic.v1.min.js">
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/d3-array@3"></script>
+  <script>
+    var charts = {};
+  </script>
+  <script src="scripts/chart1.js"></script>
+  <script src="scripts/chart2.js"></script>
+  <script src="scripts/chart3.js"></script>
+  <script src="scripts/chart4.js"></script>
+  <script src="scripts/main.js"></script>
+</body>
+</html>
