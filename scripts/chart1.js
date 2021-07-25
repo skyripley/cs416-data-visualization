@@ -66,20 +66,41 @@ charts.chart1 = function() {
         .attr("height", function(d) { return height - y(d.numOriginals); })
         .attr("fill", "#69b3a2")
 
-  }
+    // Features of the annotation
+    const annotations = [
+      {
+        note: {
+          label: "Starts producing"
+        },
+        connector: {
+          end: "arrow"
+        },
+        type: d3.annotationLabel,
+        x: 125,
+        y: 450,
+        dx: 0,
+        dy: -25
+      },
+      {
+        note: {
+          label: "Peak so far"
+        },
+        connector: {
+          end: "arrow"
+        },
+        type: d3.annotationLabel,
+        x: 545,
+        y: 85,
+        dx: 0,
+        dy: -25
+      }
+    ]
 
-  function drawAnnotation() {
-    var annotation = svg.append('g');
-    annotation.append('text')
-      .attr('x', 60)
-      .attr('y', 370)
-      .classed('annotation', true)
-      .text('Call drops significantly at night, especially during week days');
-    annotation.append('rect')
-      .attr('x', 60)
-      .attr('y', 380)
-      .attr('width', 400)
-      .attr('height', 20)
-      .classed('annotation', true);
+    // Add annotation to the chart
+    const makeAnnotations = d3.annotation()
+        .annotations(annotations)
+    d3.select("#svg1")
+        .append("g")
+        .call(makeAnnotations)
   }
 }

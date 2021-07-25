@@ -1,17 +1,24 @@
+var finalDataChart2 = [];
+
+// initialise layout variables
+const marginChart2 = {top: 50, right: 20, bottom: 50, left: 60};
+const widthChart2 = 600;
+const heightChart2 = 400;
+
+// initialise charts
+const svg = d3.select('#svg2')
+    .attr('width', widthChart2 + marginChart2.left + marginChart2.right)
+    .attr('height', heightChart2 + marginChart2.top + marginChart2.bottom)
+    .append('g')
+    .attr('transform', 'translate(' + marginChart2.left + ',' + marginChart2.top + ')')
+    .attr('id', 'svg-2-parent-g');
+
 charts.chart2 = function() {
-  // initialise layout variables
-  const margin = {top: 50, right: 20, bottom: 50, left: 60};
-  const width = 600;
-  const height = 400;
+  getAndDrawData();
+}
 
+function getAndDrawData() {
   const parseDateTime = d3.timeParse("%B %d, %Y");
-
-  // initialise charts
-  const svg = d3.select('#svg2')
-      .attr('width', width + margin.left + margin.right)
-      .attr('height', height + margin.top + margin.bottom)
-      .append('g')
-      .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
   // get data
   const file = 'data/NetflixOriginals.json';
@@ -20,8 +27,15 @@ charts.chart2 = function() {
       d.date = parseDateTime(d.Premiere);
     });
     data = data.filter(d => d.date != null);
+
+    params.forEach(function(param) {
+      if (!d3.select('#' + param.id).property('checked')) {
+        data = data.filter(d => d['Genre'] != param.id);
+      }
+    });
+
     const dataGroupedByYear = Array.from(d3.group(data, d => d.date.getFullYear()));
-    const finalData = dataGroupedByYear.map(
+    finalDataChart2 = dataGroupedByYear.map(
         function (item) {
           var sumScores = 0;
           item[1].forEach(d => sumScores += d["IMDB Score"]);
@@ -32,56 +46,151 @@ charts.chart2 = function() {
         }
     ).sort((a, b) => (a.year > b.year) ? 1 : -1);
 
-    draw(finalData);
+    drawChart2(finalDataChart2);
   });
+}
 
-  function draw(data) {
-    // X axis
-    const x = d3.scaleBand()
-        .range([0, width])
-        .domain(data.map(function (d) {
-          return d.year;
-        }))
-        .padding(0.2);
-    svg.append("g")
-        .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(x))
-        .selectAll("text")
-        .attr("transform", "translate(-10,0)rotate(-45)")
-        .style("text-anchor", "end");
+function drawChart2(data) {
+  d3.select('#svg-2-parent-g').selectAll('*').remove();
+  svg.selectAll('rect').remove();
 
-    // Add Y axis
-    const y = d3.scaleLinear()
-        .domain([0, 7])
-        .range([height, 0]);
-    svg.append("g")
-        .call(d3.axisLeft(y));
+  // X axis
+  const x = d3.scaleBand()
+      .range([0, widthChart2])
+      .domain(data.map(function (d) {
+        return d.year;
+      }))
+      .padding(0.2);
+  svg.append("g")
+      .attr("transform", "translate(0," + heightChart2 + ")")
+      .call(d3.axisBottom(x))
+      .selectAll("text")
+      .attr("transform", "translate(-10,0)rotate(-45)")
+      .style("text-anchor", "end");
 
-    // Bars
-    svg.selectAll("mybar")
-        .data(data)
-        .enter()
-        .append("rect")
-        .attr("x", function(d) { return x(d.year); })
-        .attr("y", function(d) { return y(d.averageScore); })
-        .attr("width", x.bandwidth())
-        .attr("height", function(d) { return height - y(d.averageScore); })
-        .attr("fill", "#69b3a2")
+  // Add Y axis
+  const y = d3.scaleLinear()
+      .domain([0, 7])
+      .range([heightChart2, 0]);
+  svg.append("g")
+      .call(d3.axisLeft(y));
 
+  // Bars
+  svg.selectAll("mybar")
+      .data(data)
+      .enter()
+      .append("rect")
+      .attr("x", function(d) { return x(d.year); })
+      .attr("y", function(d) { return y(d.averageScore); })
+      .attr("width", x.bandwidth())
+      .attr("height", function(d) { return heightChart2 - y(d.averageScore); })
+      .attr("fill", "#69b3a2")
+
+  // Features of the annotation
+  const annotations = [
+    {
+      note: {
+        label: "Decline begins"
+      },
+      connector: {
+        end: "arrow"
+      },
+      type: d3.annotationLabel,
+      x: 250,
+      y: 75,
+      dx: 0,
+      dy: -25
+    },
+    {
+      note: {
+        label: "Worst scores since 2014"
+      },
+      connector: {
+        end: "arrow"
+      },
+      type: d3.annotationLabel,
+      x: 615,
+      y: 100,
+      dx: 0,
+      dy: -25
+    }
+  ]
+
+  if (params.some(param => !d3.select('#' + param.id).property('checked'))) {
+    // remove annotations
+    d3.select('#svg-2-annotations').selectAll('*').remove();
+    d3.select('#svg-2-annotations').remove();
+  } else {
+    // Add annotation to the chart
+    const makeAnnotations = d3.annotation()
+        .annotations(annotations);
+    d3.select("#svg2")
+        .append("g")
+        .attr('id', 'svg-2-annotations')
+        .call(makeAnnotations);
   }
+}
 
-  function drawAnnotation() {
-    var annotation = svg.append('g');
-    annotation.append('text')
-        .attr('x', 60)
-        .attr('y', 370)
-        .classed('annotation', true)
-        .text('Call drops significantly at night, especially during week days');
-    annotation.append('rect')
-        .attr('x', 60)
-        .attr('y', 380)
-        .attr('width', 400)
-        .attr('height', 20)
-        .classed('annotation', true);
-  }
+const params = [
+  {
+    id: "Action",
+  },
+  {
+    id: "Adventure",
+  },
+  {
+    id: "Animation",
+  },
+  {
+    id: "Anime",
+  },
+  {
+    id: "Christmas",
+  },
+  {
+    id: "Comedy",
+  },
+  {
+    id: "Crime",
+  },
+  {
+    id: "Documentary",
+  },
+  {
+    id: "Drama",
+  },
+  {
+    id: "Fantasy",
+  },
+  {
+    id: "Family",
+  },
+  {
+    id: "Musical",
+  },
+  {
+    id: "Mystery",
+  },
+  {
+    id: "Other",
+  },
+  {
+    id: "Romance",
+  },
+  {
+    id: "Science-Fiction",
+  },
+  {
+    id: "Sports-film",
+  },
+  {
+    id: "War",
+  },
+  {
+    id: "Western",
+  },
+];
+
+function updateChart2Data() {
+  getAndDrawData();
 }

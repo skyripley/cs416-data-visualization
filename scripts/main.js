@@ -12,9 +12,8 @@ new fullpage('#fullpage', {
 
   // events
   afterSlideLoad: function(section, origin, destination, direction) {
-    console.log('destination.index', destination.index);
     var numberOfIntroduction = 2;
-    if (destination.index <= numberOfIntroduction || destination.index > numberOfIntroduction + 4) {
+    if (destination.index <= numberOfIntroduction || destination.index > numberOfIntroduction + 3) {
       return;
     }
 
